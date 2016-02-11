@@ -1,0 +1,180 @@
+= POD - Profiles for Object Display
+:toc:
+
+== Status
+Author::
+ Mike Amundsen, mca@amundsen.com
+  
+Status::
+  *[white red-background]#Working Draft#* -- _Only experimental and `proof-of-concept' apps should be built on this unstable draft._
+Proposed IANA Registrations::
+  +application/prs.pod+json+
+
+////
+  *[white red-background]#Working Draft#* -- _Only experimental and `proof-of-concept' apps should be built on this unstable draft._
+  *[black yellow-background]#Stable Draft#* _While stable, this is still a *draft* specification and it MAY introduce breaking changes_
+  *[white blue-background]#Submitted to IANA#* -- _This specification is not expected to introduce any breaking changes for this media-type._
+  *[white green-background]#Approved by IANA#* -- _This specification will not introduce any breaking changes for this media-type._
+////
+
+Last Updated::
+  {docdate}
+
+== General
+This document contains the details of the *Profile Object Display* (POD) specification used in the book _RESTful Web Clients_ by Mike Amundsen. This specification is designed to describe the rules for displaying domain objects and their properties in a human-centric user interface. This general specification can be used as an internal JSON object or (as described in XX below) POD documents can be requested from remote locations over HTTP at runtime.
+
+Below is an example of a valid POD document:
+
+.A Valid POD Document
+----
+{
+  "user" : {
+    "id" : {"prompt" : "ID", "render" : "none"},
+    "nick" : {"prompt" : "Nickname", "render" : "text"},
+    "email" : {"prompt" : "Email", "render" : "text"},
+    "name" : {"prompt" : "Full Name", "render" : "text"},
+    "password" : {"prompt" : "Password", "render" : "text"},
+    "dateCreated" : {"prompt" : "Date Created", "render" : "none"},
+    "dateUpdated" : {"prompt" : "Date Updated", "render" : "none"}
+  }
+}
+----
+ 
+== Design Goals
+The goal of the POD specification is to make it easy to describe rendering rules for shared data objects. Similar to the way HTML.INPUT elements describe rules for rendering human-centric data input fields, POD documents provide rules for rendering data _display_ fields. 
+
+Typically, each POD document desribes a single shared object (e.g. "user", "customer", "product", etc.). Each document contains a list of one ore more properties that are members of the object and each property has an associated +prompt+ and +render+ value (e.g. +"email" : {"prompt" : "Email Address", "render" : "text"}+). The _key_ of each property (e.g. "email") usually corresponds to the name of a data element to display. Rendering engines can use this information to decide how (and whether) to display the asscociated data on a screen. 
+
+These rules can be packaged as part of an installed application or can be shared at runtime over the Web. When sharing over the Web at runtime, services can inform client apps of the availability of POD documents via the HTTP LINK header and client apps can request those documents and use the responses to determine how to display associated data objects.
+
+=== Compliance
+An implementation is not compliant if it fails to satisfy one or more of the MUST or REQUIRED elements. An implementation that satisfies all the MUST and REQUIRED elements as well as all the SHOULD and RECOMMENDED elements is said to be "unconditionally compliant"; one that satisfies all the MUST and REQUIRED elements but not all the SHOULD and RECOMMENDED elements is said to be "conditionally compliant."
+
+[NOTE]
+====
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC <<rfc2119,[RFC2119]>>.
+====
+
+== The POD Document Model
+The POD document model is rather simple. It MUST be valid JSON document <<rfc4627,[RFC4627]>> that consists of a single enclosing +OBJECT+ element which has one or more +PROPERTY+ elements. A POD document typically has one +OBJECT+ element but MAY have multiple +OBJECT+ elements.
+
+=== Quick View
+Below is the structure of a POD document:
+
+.POD Document Model
+----
+{
+  "OBJECT" : {
+    "PROPERTY" {"prompt" : "STRING", "render" : "STRING"},
+    ... more property objects
+  },
+  "OBJECT" : {
+    "PROPERTY" {"prompt" : "STRING", "render" : "STRING"},
+    ... more property objects
+  }
+}
+----
+
+=== Details
+Here are the details:
+
++OBJECT+::
+  The +OBJECT+ element identifies a domain object. It is a REQUIRED element and it MUST be a valid JSON +STRING+. The +OBJECT+ element has one or more +PROPERTY+ elements as children.
+
++PROPERTY+::
+  The +PROPERTY+ element identifies a domain object's property. It is a RECOMMENDED element and it MUST be a valid JSON +STRING+.   The +PROPERTY+ element has one or more named attributes. For this version of the POD spec, there are two defined attributes: +prompt+ and +render+. These attributes are OPTIONAL.
+
++prompt+::
+  The +prompt+ attribute contains a JSON string that represents a human-readable string to be used to identify displayed data. This is an OPTIONAL attributed. If it is missing, the +OBJECT+ string MAY be treated as the value for the +prompt+ attribute.
+
++render+::
+  The +render+ attribute contains a JSON string that represents details on how the associated +PROPERTY+ SHOULD be rendered in the user interface. This is an OPTIONAL attribute. If it is missing, the attribute SHOULD be assumed to be set to the value of +text+. For this version of the POD spec, the following is a list of valid values (and their suggested use):
+  +
+  * +text+ : render as a string of text
+  * +none+ : do not render on the screen at all
+  * +embedded+ : If an image or URL, render the contents as an embedded element (e.g. HTML.IMG or HTML.IFRAME)
+  * +link+ : If an image or URL, render the contents as a clickable link (e.g. HTML.A)
+
+== Sharing POD Documents at Runtime
+POD documents can be shared at runtime over the Web. Services can `announce' the availability of POD documents by sharing URIs marked with the registered +rel+ value <<iana-rel,[IANA-REL]>> of "profile" <<rfc6906,[RFC6906]>>. Clients can use the shared URI to make a request for the POD document using the +application/prs.pod+json+ media type identifier.
+
+=== The POD Media Type Identifier
+This specification defines the POD media type identifier as: +application/prs.pod.json+. Clients requesting a POD document SHOULD use this value as the HTTP +accept+ header. Servers responding with a POD document SHOULD use this same value as the HTTP +content-type+ header.
+
+=== Requesting POD Documents
+Client applications SHOULD make an HTTP GET request to that URL using the ACCEPT Header value of +application/prs.pod+json+. If the document request is valid, the service SHOULD return the POD document using the CONTENT Header value of +application/prs.pod+json+ (see below).
+
+An HTTP session requesting POD documents follows:
+
+First, a client application makes a request for a +user+ record:
+
+----
+*** REQUEST ***
+GET /user/123 HTTP/1.1
+accept: application/json
+...
+
+*** RESPONSE ***
+200 OK /user/123
+content-type application/json
+link: <http://example.org/pods/user.pod;rel=profile>
+...
+----
+
+Since the +rel=profile+ appears in the response, the client decides to make a request for a POD document:
+
+----
+*** REQUEST ***
+GET /pods/user.pod HTTP/1.1
+accept: application/prs.pod+json
+...
+
+*** RESPONSE ***
+200 OK /pods/user.pod
+content-type application/prs.pod+json
+...
+----
+
+Now the client can use the response (+/pods/user.pod+) to determine how to render the contents of the "user" response (+/user/123+).
+
+== Extending POD Documents
+Any POD document can be extended with new objects and attributes as long as the extension results in a valid JSON document. The only rules that MUST be followed are:
+
+ . You MUST NOT remove any existing attributes or objects listed in this specification.
+ . You MUST NOT change the meaning or use of any existing attributes or objects listed in this specification. 
+ . You MAY add new attributes and objects as long as they do not cause existing compliant POD document parsers to fail.
+
+=== Enclosing Your POD Extensions
+You SHOULD add new features in POD documents in a way that reduces the likelihood that future changes to the standard format as well as extensions from other document authors will cause a conflict with your extensions. Typically, this means using a unique name for an enclosing object to hold all your extensions. 
+
+For example, the following shows how to safely add the +style+ extension by enclosing it in a unique identifying object named +"amundsen"+:
+
+----
+{
+  "user" : {
+    "email" : {
+      "prompt" : "Email", 
+      "render" : "text",
+      "amundsen : {
+        "style" : "bold"
+      }
+    },
+    "name" : {
+      "prompt" : "Full Name", 
+      "render" : "text",
+      "amundsen" : {
+        "style" : "italic"
+      }
+    }
+  }
+}
+----
+ 
+This opens a wide set of possibilities for extending POD documents with only a low possibility of conflicts with other unknoxn extensions. 
+
+== References
+ * [[rfc2119]] [RFC2119] Bradner, S.,"Key words for use in RFCs to Indicate Requirement Levels", March 1997, http://tools.ietf.org/html/rfc2119
+ * [[rfc4627]] [RFC4627] D. Crockford, "The application/json Media Type for JavaScript Object Notation (JSON)", July 2006, http://tools.ietf.org/html/rfc4627
+ * [[iana-rel]] [IANA-REL] "Link Relations, December 2013, http://www.iana.org/assignments/link-relations/link-relations.xhtml
+ * [[rfc6906]] [RFC6906] Wilde, E., "The `profile' Link Relation Type", March 2013, https://tools.ietf.org/html/rfc6906
+ 
