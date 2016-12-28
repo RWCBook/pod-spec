@@ -8,7 +8,7 @@ Author::
 Status::
   *[white red-background]#Working Draft#* -- _Only experimental and `proof-of-concept' apps should be built on this unstable draft._
 Proposed IANA Registrations::
-  +application/prs.pod+json+
+  +application/prs.profile-object-desc+json+
 
 ////
   *[white red-background]#Working Draft#* -- _Only experimental and `proof-of-concept' apps should be built on this unstable draft._
@@ -21,7 +21,7 @@ Last Updated::
   {docdate}
 
 == General
-This document contains the details of the *Profile Object Display* (POD) specification used in the book _RESTful Web Clients_ by Mike Amundsen. This specification is designed to describe the rules for displaying domain objects and their properties in a human-centric user interface. This general specification can be used as an internal JSON object or (as described in XX below) POD documents can be requested from remote locations over HTTP at runtime.
+This document contains the details of the *Profile Object Display* (POD) specification used in the book _RESTful Web Clients_ by Mike Amundsen. This specification is designed to describe the rules for displaying domain objects and their properties in a human-centric user interface. This general specification can be used as an internal JSON object or (as described in <<sharing-pod,Sharing POD Documents at Runtime>> below) POD documents can be requested from remote locations over HTTP at runtime.
 
 Below is an example of a valid POD document:
 
@@ -95,14 +95,15 @@ Here are the details:
   * +embedded+ : If an image or URL, render the contents as an embedded element (e.g. HTML.IMG or HTML.IFRAME)
   * +link+ : If an image or URL, render the contents as a clickable link (e.g. HTML.A)
 
+[[sharing-pod]]
 == Sharing POD Documents at Runtime
 POD documents can be shared at runtime over the Web. Services can `announce' the availability of POD documents by sharing URIs marked with the registered +rel+ value <<iana-rel,[IANA-REL]>> of "profile" <<rfc6906,[RFC6906]>>. Clients can use the shared URI to make a request for the POD document using the +application/prs.pod+json+ media type identifier.
 
 === The POD Media Type Identifier
-This specification defines the POD media type identifier as: +application/prs.pod.json+. Clients requesting a POD document SHOULD use this value as the HTTP +accept+ header. Servers responding with a POD document SHOULD use this same value as the HTTP +content-type+ header.
+This specification defines the POD media type identifier as: +application/prs.profile-object-desc.json+. Clients requesting a POD document SHOULD use this value as the HTTP +accept+ header. Servers responding with a POD document SHOULD use this same value as the HTTP +content-type+ header.
 
 === Requesting POD Documents
-Client applications SHOULD make an HTTP GET request to that URL using the ACCEPT Header value of +application/prs.pod+json+. If the document request is valid, the service SHOULD return the POD document using the CONTENT Header value of +application/prs.pod+json+ (see below).
+Client applications SHOULD make an HTTP GET request to that URL using the ACCEPT Header value of +application/prs.profile-object-desc+json+. If the document request is valid, the service SHOULD return the POD document using the CONTENT Header value of +application/prs.profile-object-desc+json+ (see below).
 
 An HTTP session requesting POD documents follows:
 
@@ -126,12 +127,12 @@ Since the +rel=profile+ appears in the response, the client decides to make a re
 ----
 *** REQUEST ***
 GET /pods/user.pod HTTP/1.1
-accept: application/prs.pod+json
+accept: application/prs.profile-object-desc+json
 ...
 
 *** RESPONSE ***
 200 OK /pods/user.pod
-content-type application/prs.pod+json
+content-type application/prs.profile-object-desc+json
 ...
 ----
 
@@ -170,7 +171,7 @@ For example, the following shows how to safely add the +style+ extension by encl
 }
 ----
  
-This opens a wide set of possibilities for extending POD documents with only a low possibility of conflicts with other unknoxn extensions. 
+This opens a wide set of possibilities for extending POD documents with only a low possibility of conflicts with other unknown extensions. 
 
 == References
  * [[rfc2119]] [RFC2119] Bradner, S.,"Key words for use in RFCs to Indicate Requirement Levels", March 1997, http://tools.ietf.org/html/rfc2119

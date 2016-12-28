@@ -765,7 +765,7 @@ Proposed IANA Registrations
 </dt>
 <dd>
 <p>
-  <code>application/prs.pod+json</code>
+  <code>application/prs.profile-object-desc+json</code>
 </p>
 </dd>
 </dl></div>
@@ -775,7 +775,7 @@ Last Updated
 </dt>
 <dd>
 <p>
-  2016-02-10
+  2016-12-28
 </p>
 </dd>
 </dl></div>
@@ -784,7 +784,7 @@ Last Updated
 <div class="sect1">
 <h2 id="_general">General</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>This document contains the details of the <strong>Profile Object Display</strong> (POD) specification used in the book <em>RESTful Web Clients</em> by Mike Amundsen. This specification is designed to describe the rules for displaying domain objects and their properties in a human-centric user interface. This general specification can be used as an internal JSON object or (as described in XX below) POD documents can be requested from remote locations over HTTP at runtime.</p></div>
+<div class="paragraph"><p>This document contains the details of the <strong>Profile Object Display</strong> (POD) specification used in the book <em>RESTful Web Clients</em> by Mike Amundsen. This specification is designed to describe the rules for displaying domain objects and their properties in a human-centric user interface. This general specification can be used as an internal JSON object or (as described in <a href="#sharing-pod">Sharing POD Documents at Runtime</a> below) POD documents can be requested from remote locations over HTTP at runtime.</p></div>
 <div class="paragraph"><p>Below is an example of a valid POD document:</p></div>
 <div class="listingblock">
 <div class="title">A Valid POD Document</div>
@@ -911,16 +911,16 @@ Last Updated
 </div>
 </div>
 <div class="sect1">
-<h2 id="_sharing_pod_documents_at_runtime">Sharing POD Documents at Runtime</h2>
+<h2 id="sharing-pod">Sharing POD Documents at Runtime</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>POD documents can be shared at runtime over the Web. Services can &#8216;announce&#8217; the availability of POD documents by sharing URIs marked with the registered <code>rel</code> value <a href="#iana-rel">[IANA-REL]</a> of "profile" <a href="#rfc6906">[RFC6906]</a>. Clients can use the shared URI to make a request for the POD document using the <code>application/prs.pod+json</code> media type identifier.</p></div>
 <div class="sect2">
 <h3 id="_the_pod_media_type_identifier">The POD Media Type Identifier</h3>
-<div class="paragraph"><p>This specification defines the POD media type identifier as: <code>application/prs.pod.json</code>. Clients requesting a POD document SHOULD use this value as the HTTP <code>accept</code> header. Servers responding with a POD document SHOULD use this same value as the HTTP <code>content-type</code> header.</p></div>
+<div class="paragraph"><p>This specification defines the POD media type identifier as: <code>application/prs.profile-object-desc.json</code>. Clients requesting a POD document SHOULD use this value as the HTTP <code>accept</code> header. Servers responding with a POD document SHOULD use this same value as the HTTP <code>content-type</code> header.</p></div>
 </div>
 <div class="sect2">
 <h3 id="_requesting_pod_documents">Requesting POD Documents</h3>
-<div class="paragraph"><p>Client applications SHOULD make an HTTP GET request to that URL using the ACCEPT Header value of <code>application/prs.pod+json</code>. If the document request is valid, the service SHOULD return the POD document using the CONTENT Header value of <code>application/prs.pod+json</code> (see below).</p></div>
+<div class="paragraph"><p>Client applications SHOULD make an HTTP GET request to that URL using the ACCEPT Header value of <code>application/prs.profile-object-desc+json</code>. If the document request is valid, the service SHOULD return the POD document using the CONTENT Header value of <code>application/prs.profile-object-desc+json</code> (see below).</p></div>
 <div class="paragraph"><p>An HTTP session requesting POD documents follows:</p></div>
 <div class="paragraph"><p>First, a client application makes a request for a <code>user</code> record:</p></div>
 <div class="listingblock">
@@ -941,12 +941,12 @@ link: &lt;http://example.org/pods/user.pod;rel=profile&gt;
 <div class="content">
 <pre><code>*** REQUEST ***
 GET /pods/user.pod HTTP/1.1
-accept: application/prs.pod+json
+accept: application/prs.profile-object-desc+json
 ...
 
 *** RESPONSE ***
 200 OK /pods/user.pod
-content-type application/prs.pod+json
+content-type application/prs.profile-object-desc+json
 ...</code></pre>
 </div></div>
 <div class="paragraph"><p>Now the client can use the response (<code>/pods/user.pod</code>) to determine how to render the contents of the "user" response (<code>/user/123</code>).</p></div>
@@ -999,7 +999,7 @@ You MAY add new attributes and objects as long as they do not cause existing com
   }
 }</code></pre>
 </div></div>
-<div class="paragraph"><p>This opens a wide set of possibilities for extending POD documents with only a low possibility of conflicts with other unknoxn extensions.</p></div>
+<div class="paragraph"><p>This opens a wide set of possibilities for extending POD documents with only a low possibility of conflicts with other unknown extensions.</p></div>
 </div>
 </div>
 </div>
@@ -1034,7 +1034,7 @@ You MAY add new attributes and objects as long as they do not cause existing com
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-02-10 19:59:47 Eastern Standard Time
+Last updated 2016-12-28 15:04:01 EST
 </div>
 </div>
 </body>
