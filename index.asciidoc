@@ -21,7 +21,7 @@ Last Updated::
   {docdate}
 
 == General
-This document contains the details of the *Profile Object Display* (POD) specification used in the book _RESTful Web Clients_ by Mike Amundsen. This specification is designed to describe the rules for displaying domain objects and their properties in a human-centric user interface. This general specification can be used as an internal JSON object or (as described in <<sharing-pod,Sharing POD Documents at Runtime>> below) POD documents can be requested from remote locations over HTTP at runtime.
+This document contains the details of the *Profile Object Display* (POD) specification used in the book _RESTful Web Clients_ <<rwcbook, [RWCBook]>> by Mike Amundsen. This specification is designed to describe the rules for displaying domain objects and their properties in a human-centric user interface. This general specification can be used as an internal JSON object or (as described in <<sharing-pod,Sharing POD Documents at Runtime>> below) POD documents can be requested from remote locations over HTTP at runtime.
 
 Below is an example of a valid POD document:
 
@@ -174,6 +174,7 @@ For example, the following shows how to safely add the +style+ extension by encl
 This opens a wide set of possibilities for extending POD documents with only a low possibility of conflicts with other unknown extensions. 
 
 == References
+ * [[rwcbook]] [RWCBook] Amundsen, M., "RESTful Web Clients", January 2017, http://g.mamund.com/rwcbook
  * [[rfc2119]] [RFC2119] Bradner, S.,"Key words for use in RFCs to Indicate Requirement Levels", March 1997, http://tools.ietf.org/html/rfc2119
  * [[rfc4627]] [RFC4627] D. Crockford, "The application/json Media Type for JavaScript Object Notation (JSON)", July 2006, http://tools.ietf.org/html/rfc4627
  * [[iana-rel]] [IANA-REL] "Link Relations, December 2013, http://www.iana.org/assignments/link-relations/link-relations.xhtml
