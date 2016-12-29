@@ -1,4 +1,4 @@
-= POD - Profiles for Object Display
+= POD - Profiles for Object Description
 :toc:
 
 == Status
@@ -7,8 +7,6 @@ Author::
   
 Status::
   *[white red-background]#Working Draft#* -- _Only experimental and `proof-of-concept' apps should be built on this unstable draft._
-Proposed IANA Registrations::
-  +application/prs.profile-object-desc+json+
 
 ////
   *[white red-background]#Working Draft#* -- _Only experimental and `proof-of-concept' apps should be built on this unstable draft._
@@ -17,11 +15,17 @@ Proposed IANA Registrations::
   *[white green-background]#Approved by IANA#* -- _This specification will not introduce any breaking changes for this media-type._
 ////
 
+Proposed IANA Registrations::
+  +application/prs.profile-object-desc+json+
+
+Repository::
+  https://github.com/RWCBook/pod-spec
+  
 Last Updated::
   {docdate}
 
 == General
-This document contains the details of the *Profile Object Display* (POD) specification used in the book _RESTful Web Clients_ <<rwcbook, [RWCBook]>> by Mike Amundsen. This specification is designed to describe the rules for displaying domain objects and their properties in a human-centric user interface. This general specification can be used as an internal JSON object or (as described in <<sharing-pod,Sharing POD Documents at Runtime>> below) POD documents can be requested from remote locations over HTTP at runtime.
+This document contains the details of the *Profile Object Description* (POD) specification used in the book _RESTful Web Clients_ <<rwcbook, [RWCBook]>> by Mike Amundsen. This specification is designed to describe the rules for displaying domain objects and their properties in a human-centric user interface. This general specification can be used as an internal JSON object or (as described in <<sharing-pod,Sharing POD Documents at Runtime>> below) POD documents can be requested from remote locations over HTTP at runtime.
 
 Below is an example of a valid POD document:
 
@@ -46,6 +50,9 @@ The goal of the POD specification is to make it easy to describe rendering rules
 Typically, each POD document desribes a single shared object (e.g. "user", "customer", "product", etc.). Each document contains a list of one ore more properties that are members of the object and each property has an associated +prompt+ and +render+ value (e.g. +"email" : {"prompt" : "Email Address", "render" : "text"}+). The _key_ of each property (e.g. "email") usually corresponds to the name of a data element to display. Rendering engines can use this information to decide how (and whether) to display the asscociated data on a screen. 
 
 These rules can be packaged as part of an installed application or can be shared at runtime over the Web. When sharing over the Web at runtime, services can inform client apps of the availability of POD documents via the HTTP LINK header and client apps can request those documents and use the responses to determine how to display associated data objects.
+
+=== Updates
+There is an open source repository <<repo,[REPO]>> for this specification. Readers are encouraged to submit updates via the repository any time.
 
 === Compliance
 An implementation is not compliant if it fails to satisfy one or more of the MUST or REQUIRED elements. An implementation that satisfies all the MUST and REQUIRED elements as well as all the SHOULD and RECOMMENDED elements is said to be "unconditionally compliant"; one that satisfies all the MUST and REQUIRED elements but not all the SHOULD and RECOMMENDED elements is said to be "conditionally compliant."
@@ -175,6 +182,7 @@ This opens a wide set of possibilities for extending POD documents with only a l
 
 == References
  * [[rwcbook]] [RWCBook] Amundsen, M., "RESTful Web Clients", January 2017, http://g.mamund.com/rwcbook
+ * [[repo]] [REPO] Github, "Profiles for Object Description",  https://github.com/RWCBook/pod-spec
  * [[rfc2119]] [RFC2119] Bradner, S.,"Key words for use in RFCs to Indicate Requirement Levels", March 1997, http://tools.ietf.org/html/rfc2119
  * [[rfc4627]] [RFC4627] D. Crockford, "The application/json Media Type for JavaScript Object Notation (JSON)", July 2006, http://tools.ietf.org/html/rfc4627
  * [[iana-rel]] [IANA-REL] "Link Relations, December 2013, http://www.iana.org/assignments/link-relations/link-relations.xhtml
